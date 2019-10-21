@@ -1,0 +1,4 @@
+background-color: #241B13;
+color: #fff;
+font: 10pt Source Code Pro;
+QButton {color: #212679}
