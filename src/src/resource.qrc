@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/ico.svg</file>
+        <file>style/style.qss</file>
+        <file>config/setting.json</file>
+        <file>config/filetype.json</file>
+    </qresource>
+</RCC>

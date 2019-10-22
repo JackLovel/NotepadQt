@@ -1,0 +1,40 @@
+{
+    "filetype":[
+        {
+            "suffix": "txt",
+            "type": "normal text file"
+        },
+        {
+            "suffix": "html",
+            "type": "hyperText markup language file"
+        },
+        {
+            "suffix": "java",
+            "type": "java source file"
+        },
+        {
+            "suffix": "rb",
+            "type": "ruby file"
+        },
+        {
+            "suffix": "py",
+            "type": "python file"
+        },
+        {
+            "suffix": "json",
+            "type": "json file"
+        },
+        {
+            "suffix": "cpp",
+            "type": "c++ source file"
+        },
+        {
+            "suffix": "h",
+            "type": "c++ head file"
+        },
+        {
+            "suffix": "php",
+            "type": "php file"
+        }
+    ]
+}
