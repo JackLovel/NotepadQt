@@ -1,8 +1,0 @@
-Package: notepad
-Version: 2.0.0
-Maintainer: JackLovel <JackLovel@foxmail.com>
-Description: 一个简单的记事本程序
-Homepage: https://github.com/username/projectname
-Architecture: all
-Depends: debhelper (>= 9), qt5-default, dpkg-dev, qt5-qmake, qtbase5-dev
-
