@@ -67,30 +67,29 @@ void Md5Dialog::clipboardSlot()
 
 void Md5Dialog::getMd5FileSlot()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    "打开文件");
-
+    QString fileName = QFileDialog::getOpenFileName(this, "打开文件");
     QFile file(fileName);
-    qint32 fileSize = file.size();
-    const qint32 bufferSize = 1024;
-
-    if (file.open(QIODevice::ReadOnly)) {
-        char buffer[bufferSize];
-        int bytesRead;
-        int readSize = qMin(fileSize, bufferSize);
-
-        QCryptographicHash hash(QCryptographicHash::Md5);
-
-        while (readSize > 0 && (bytesRead = file.read(buffer, readSize)) > 0) {
-            fileSize -= bytesRead;
-            hash.addData(buffer, bytesRead);
-            readSize = qMin(fileSize, bufferSize);
-        }
-
-        file.close();
-        QString md5Value = hash.result().toHex();
-        qDebug() << md5Value;
+    if (!file.open(QIODevice::ReadOnly)) {
+        return;
     }
+
+    const qint32 bufferSize = 1024;
+    char buffer[bufferSize];
+    int bytesRead;
+
+    qint32 fileSize = file.size();
+    int readSize = qMin(fileSize, bufferSize);
+
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    while (readSize > 0 && (bytesRead = file.read(buffer, readSize)) > 0) {
+        fileSize -= bytesRead;
+        hash.addData(buffer, bytesRead);
+        readSize = qMin(fileSize, bufferSize);
+    }
+
+    file.close();
+    QString md5Value = hash.result().toHex();
+    qDebug() << md5Value;
 
     return;
 }
