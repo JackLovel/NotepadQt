@@ -1,4 +1,4 @@
-** Debian                                                               
+** Ubuntu 安装                                                              
 
 - 下载 
 
