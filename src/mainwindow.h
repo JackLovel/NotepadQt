@@ -56,6 +56,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void loadRectFiles();
+
 protected:
     void closeEvent(QCloseEvent *e) override;
     void dragEnterEvent(QDragEnterEvent *e) override; // 拖动
@@ -130,6 +132,7 @@ private:
     void setDefaultKey();
 
     QString  settingFile = QDir::currentPath() + "/setting.ini";
+    QMenu *recentFileMenu;
 };
 
 #endif // MAINWINDOW_H

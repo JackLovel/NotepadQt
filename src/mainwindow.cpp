@@ -145,10 +145,12 @@ void MainWindow::initUI()
     setWindowTitle(tr("Notepad"));
     setCentralWidget(m_tabWidget);
 
-//    qDebug() << Util::getKeyMap();
     connect(tabSizeCombox, SIGNAL(activated(QString)), this, SLOT(setTabToWidth(QString)));
 
 
+    recentFileMenu = new QMenu("最近的文件");
+    loadRectFiles();
+    menuBar()->addMenu(recentFileMenu);
 }
 
 void MainWindow::exitSlot()
@@ -163,11 +165,11 @@ Editor* MainWindow::getEditor(){
 
 void MainWindow::setFileSuffix(QString suffix)
 {
-    qDebug() << Util::getFileTypeMap();
+//    qDebug() << Util::getFileTypeMap();
 
     QString description = Util::getFileTypeMap()[suffix];
 
-    qDebug() << description;
+//    qDebug() << description;
     fileTypeLabel->setText(description);
 }
 
@@ -208,6 +210,8 @@ void MainWindow::saveSlot()
         fileName = currentFile;
     }
 
+    qDebug() << fileName;
+
     getEditor()->save(fileName);
     setWindowTitle(fileName);
 }
@@ -217,6 +221,7 @@ void MainWindow::saveAsSlot()
     QString fileName = QFileDialog
             ::getSaveFileName(this, "Save as");
 
+//    qDebug() << "文件的路径:" << fileName;
     setWindowTitle(fileName);
     getEditor()->saveAs(fileName);
 }
@@ -563,7 +568,25 @@ void MainWindow::setTabToWidth(QString widthText)
     e->setTabWidth(tabWidth);
 }
 
+void MainWindow::loadRectFiles()
+{
+    auto maps = Util::getRectFiles();
+    for(auto k: maps.keys())
+    {
+        auto v = maps[k];
+        recentFileMenu->addAction(QString("%2").arg(v));
+    }
 
+//    auto actionList = recentFileMenu->actions();
+//    for(auto a : actionList) {
+//        connect(a, &QAction::triggered, [=]{
+
+//           auto path = a->text();
+//           QString content = Util::readFile(path);
+////           ui->textEdit->setText(content); // 点击后执行的操作
+//        });
+//    }
+}
 
 
 

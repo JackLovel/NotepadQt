@@ -25,6 +25,9 @@ public:
     static bool configExist(QString configName);
     static QMap<QString, QString> getKeyMap();
     static QMap<QString, QString> getFileTypeMap();
+
+    static QMap<QString, QString> getRectFiles();
+    static QString getProjectDir();
 };
 
 #endif // UTIL_H
