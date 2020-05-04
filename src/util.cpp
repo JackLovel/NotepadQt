@@ -12,6 +12,9 @@
 #include <QJsonArray>
 #include <QDebug>
 #include <QVariant>
+#include <QDesktopWidget>
+#include <QMap>
+#include <QApplication>
 
 void Util::loadStyleSheet(const QString &styleSheetFile, QWidget *widget)
 {
@@ -139,5 +142,17 @@ bool Util::configExist(QString configName)
     }
     setting.endGroup();
     return false;
+}
+
+// 获取桌面的分辨率
+QMap<int, int> GetScreenResolution() {
+    QMap<int, int> map;
+
+    QDesktopWidget* desktop = QApplication::desktop();
+    int width = desktop->width();
+    int height = desktop->height();
+    map[width] = height;
+
+    return map;
 }
 
