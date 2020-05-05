@@ -582,15 +582,25 @@ void MainWindow::loadRectFiles()
         recentFileMenu->addAction(QString("%2").arg(v));
     }
 
-//    auto actionList = recentFileMenu->actions();
-//    for(auto a : actionList) {
-//        connect(a, &QAction::triggered, [=]{
+    // 绑定事件
+    auto actionList = recentFileMenu->actions();
+    for(auto a : actionList) {
+        connect(a, &QAction::triggered, [=]{
 
-//           auto path = a->text();
-//           QString content = Util::readFile(path);
-////           ui->textEdit->setText(content); // 点击后执行的操作
-//        });
-//    }
+           // 要处理的事件
+           auto path = a->text();
+           auto fileName = Util::getSplitLast(path, "/");
+
+           Editor *editor = new Editor;
+           auto content = Util::readFile(path);
+           editor->setText(content);
+
+           m_tabWidget->addTab(editor, fileName);
+
+           auto index = m_tabWidget->count() - 1;
+           m_tabWidget->setCurrentIndex(index);
+        });
+    }
 }
 
 
