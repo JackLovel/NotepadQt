@@ -133,6 +133,9 @@ private:
 
     QString  settingFile = QDir::currentPath() + "/setting.ini";
     QMenu *recentFileMenu;
+
+    // debug
+    void debug();
 };
 
 #endif // MAINWINDOW_H

@@ -159,6 +159,12 @@ QMap<int, int> GetScreenResolution() {
 QString Util::getProjectDir() {
     return QDir::currentPath();
 }
+
+QString Util::getSplitLast(QString string, QString separator)
+{
+    return string.split(separator).last();
+}
+
 // 读取配置文件
 QMap<QString, QString> Util::getRectFiles()
 {
@@ -179,3 +185,16 @@ QMap<QString, QString> Util::getRectFiles()
     return map;
 }
 
+
+void Util::setRectFiles(const QString &path)
+{
+
+    QString file = "recentFiles.ini";
+    QString  settingFile = getProjectDir() + "/" + file;
+    QSettings setting(settingFile, QSettings::IniFormat);
+
+    const QString group = "RectFile";
+    setting.beginGroup(group);
+    setting.setValue(path, path);
+    setting.endGroup();
+}

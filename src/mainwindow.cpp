@@ -165,36 +165,42 @@ Editor* MainWindow::getEditor(){
 
 void MainWindow::setFileSuffix(QString suffix)
 {
-//    qDebug() << Util::getFileTypeMap();
-
     QString description = Util::getFileTypeMap()[suffix];
-
-//    qDebug() << description;
     fileTypeLabel->setText(description);
 }
 
 void MainWindow::openSlot()
 {
-    QString tabName;
+    QString fileName = "";
+    QString tabName = "";
+    QString separator = "/";
     int index;
 
-    QString fileName = QFileDialog::getOpenFileName(this,
+    QString path = QFileDialog::getOpenFileName(this,
                                                     "open file");
-    getEditor()->open(fileName);
+    getEditor()->open(path);
 
-    if (fileName.isEmpty()) {
+    if (path.isEmpty()) {
         index = 0;
         tabName = "空白文档";
     } else {
         index = m_tabWidget->currentIndex();
-        tabName = fileName.split("/").last();
+        //
+        fileName = Util::getSplitLast(path, separator);
+        tabName = fileName;
+        // 将 path 写入 recentFiles.ini
+        // [path, path]
+        Util::setRectFiles(path);
     }
 
-    QString suffix = getEditor()->fileSuffix = fileName.split(".").last();
-    //qDebug() << suffix;
+    QString suffix = getEditor()->fileSuffix = path.split(".").last();
     setFileSuffix(suffix);
 
     m_tabWidget->setTabText(index, tabName);
+}
+
+void MainWindow::debug() {
+
 }
 
 void MainWindow::saveSlot()
@@ -221,7 +227,6 @@ void MainWindow::saveAsSlot()
     QString fileName = QFileDialog
             ::getSaveFileName(this, "Save as");
 
-//    qDebug() << "文件的路径:" << fileName;
     setWindowTitle(fileName);
     getEditor()->saveAs(fileName);
 }
@@ -265,8 +270,8 @@ void MainWindow::initTray()
     systemTray->setContextMenu(trayMenu);
     systemTray->show();
 
-    connect(systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
+    connect(systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 

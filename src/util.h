@@ -26,8 +26,14 @@ public:
     static QMap<QString, QString> getKeyMap();
     static QMap<QString, QString> getFileTypeMap();
 
-    static QMap<QString, QString> getRectFiles();
+    // 最近文件功能相关
     static QString getProjectDir();
+    static QMap<QString, QString> getRectFiles();
+    static void setRectFiles(const QString &path);
+
+
+    // 字符串处理
+    static QString getSplitLast(QString string, QString separator);
 };
 
 #endif // UTIL_H
