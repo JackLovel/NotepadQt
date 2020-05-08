@@ -159,7 +159,7 @@ void MainWindow::initUI()
     // 计时器
     QTimer *fTimer=new QTimer(this);
     saveTime = 1000; // 1s
-    canSave = false;
+//    canSave = false;
     fTimer->start();
     fTimer->setInterval (saveTime) ;//设置定时周期，单位：毫秒
     connect(fTimer, &QTimer::timeout, this, &MainWindow::autoSaveSlot);
@@ -620,12 +620,14 @@ void MainWindow::loadRectFiles()
 void MainWindow::autoSaveSlot()
 {
     // 在没有修改的情况下，我们就不需要进行保存操作
+    Editor *editor = getEditor();
+    bool canSave = editor->canSave;
     bool check = autoSaveAction->isChecked();
     if (check) {
         if (canSave) {
-            qDebug() << "文本需要保存" << m_tabWidget->currentIndex();
+            qDebug() << "文本需要保存" << canSave;
         } else {
-            qDebug() << "文本已经保存" << m_tabWidget->currentIndex();
+            qDebug() << "文本已经保存" << canSave;
         }
     }
 }

@@ -104,7 +104,7 @@ private:
     bool italicDone = false;
     bool underLineDone = false;
     int saveTime;// 1s
-    bool canSave;
+//    bool canSave;
 
     QAction *newAct;
     QAction *exitAct;

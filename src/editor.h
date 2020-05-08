@@ -35,6 +35,7 @@ public:
     void setTabWidth(int length);
 
     QString fileSuffix;
+    bool canSave = false; // 默认的，是不需要保存
 
 signals:
     void cursorPositionChanged();
