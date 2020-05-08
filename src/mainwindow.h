@@ -82,6 +82,7 @@ public slots:
    void replaceAll(QString, QString, bool);
    void setCustomConfig();
    void goLineSlot(int);
+   void autoSaveSlot();
 
    //
    void setTabToWidth(QString);
@@ -102,6 +103,8 @@ private:
     bool boldDone = false;
     bool italicDone = false;
     bool underLineDone = false;
+    int saveTime;// 1s
+    bool canSave;
 
     QAction *newAct;
     QAction *exitAct;
@@ -123,6 +126,7 @@ private:
     QAction *updateAct;
     QAction *findAct;
     QAction *replaceAction;
+    QAction *autoSaveAction;
 
     void initTray();
     void initUI();

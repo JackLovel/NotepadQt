@@ -151,6 +151,20 @@ void MainWindow::initUI()
     recentFileMenu = new QMenu("最近的文件");
     loadRectFiles();
     menuBar()->addMenu(recentFileMenu);
+
+    autoSaveAction = new QAction("自动保存");
+    autoSaveAction->setCheckable(true);
+    autoSaveAction->setChecked(false);
+    fileMenu->addAction(autoSaveAction);
+    // 计时器
+    QTimer *fTimer=new QTimer(this);
+    saveTime = 1000; // 1s
+    canSave = false;
+    fTimer->start();
+    fTimer->setInterval (saveTime) ;//设置定时周期，单位：毫秒
+    connect(fTimer, &QTimer::timeout, this, &MainWindow::autoSaveSlot);
+//    connect(fTimer,SIGNAL(timeout()),this,SLOT(on_timer_timeout()));
+    // 每过1秒（或者2s），保存一次（触发保存函数）
 }
 
 void MainWindow::exitSlot()
@@ -603,6 +617,15 @@ void MainWindow::loadRectFiles()
     }
 }
 
-
-
-
+void MainWindow::autoSaveSlot()
+{
+    // 在没有修改的情况下，我们就不需要进行保存操作
+    bool check = autoSaveAction->isChecked();
+    if (check) {
+        if (canSave) {
+            qDebug() << "文本需要保存" << m_tabWidget->currentIndex();
+        } else {
+            qDebug() << "文本已经保存" << m_tabWidget->currentIndex();
+        }
+    }
+}
