@@ -186,7 +186,7 @@ void MainWindow::setFileSuffix(QString suffix)
 void MainWindow::openSlot()
 {
     QString fileName = "";
-    QString tabName = "";
+//    QString tabName = "";
     QString separator = "/";
     int index;
 
@@ -196,23 +196,24 @@ void MainWindow::openSlot()
 
     if (path.isEmpty()) {
         index = 0;
-        tabName = "空白文档";
+        fileName = "空白文档";
     } else {
         index = m_tabWidget->currentIndex();
 
         //
         fileName = Util::getSplitLast(path, separator);
-        tabName = fileName;
-        currentFile = fileName;
+//        tabName = fileName;
+        currentFilePath = path;
         // 将 path 写入 recentFiles.ini
         // [path, path]
         Util::setRectFiles(path);
     }
 
+//    qDebug() << currentFilePath;
     QString suffix = getEditor()->fileSuffix = path.split(".").last();
     setFileSuffix(suffix);
 
-    m_tabWidget->setTabText(index, tabName);
+    m_tabWidget->setTabText(index, fileName);
 }
 
 void MainWindow::debug() {
@@ -221,21 +222,21 @@ void MainWindow::debug() {
 
 void MainWindow::saveSlot()
 {
-    QString fileName;
-    if (currentFile.isEmpty())
+    QString path;
+    if (currentFilePath.isEmpty())
     {
-        fileName = QFileDialog::getSaveFileName(this, "保存");
-        currentFile = fileName;
+        path = QFileDialog::getSaveFileName(this, "保存");
+        currentFilePath = path;
     }
     else
     {
-        fileName = currentFile;
+        path = currentFilePath;
     }
 
-    qDebug() << fileName;
+    qDebug() << path;
 
-    getEditor()->save(fileName);
-    setWindowTitle(fileName);
+    getEditor()->save(path);
+    setWindowTitle(path);
 }
 
 void MainWindow::saveAsSlot()
@@ -627,9 +628,13 @@ void MainWindow::autoSaveSlot()
     bool check = autoSaveAction->isChecked();
     if (check) {
         if (canSave) {
-            qDebug() << "文本需要保存" << canSave;
+//            qDebug() << "当前的文本" << currentFilePath;
+//            QString file = currentFilePath;
+//            getEditor()->save(file);
+//            editor->canSave = false;
+//            qDebug() << "文本需要保存" << canSave;
         } else {
-            qDebug() << "文本已经保存" << canSave;
+//            qDebug() << "文本已经保存" << canSave;
         }
     }
 }

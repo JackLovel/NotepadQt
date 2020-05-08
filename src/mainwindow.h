@@ -91,7 +91,7 @@ private:
     bool find;
     QSystemTrayIcon *systemTray;
     QTabWidget *m_tabWidget;
-    QString currentFile;
+    QString currentFilePath;
     QLabel *lineNumberLabel;  // 行号显示
     FindDialog *findDialog;
     ReplaceDialog *replaceDialog;
@@ -103,8 +103,7 @@ private:
     bool boldDone = false;
     bool italicDone = false;
     bool underLineDone = false;
-    int saveTime;// 1s
-//    bool canSave;
+    int saveTime;
 
     QAction *newAct;
     QAction *exitAct;

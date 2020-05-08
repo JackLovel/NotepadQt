@@ -2,12 +2,9 @@
 
 Editor::Editor(QWidget *parent) : QTextEdit(parent)
 {
-    fileSuffix = " "; // init file suffix
+    setup();
 
-    setAcceptDrops(false);
-
-    // default tab width is 4
-    setTabWidth(4);
+//    canSave
 }
 
 
@@ -16,6 +13,20 @@ Editor::~Editor()
 
 }
 
+
+void Editor::setup()
+{
+    fileSuffix = " "; // init file suffix
+    fileName = "空白文档";
+    filePath = " ";
+
+    setAcceptDrops(false);
+
+    // default tab width is 4
+    setTabWidth(4);
+
+    connect(this, &QTextEdit::textChanged, this, &Editor::saveStatusSlot);
+}
 
 void Editor::wheelEvent(QWheelEvent *e)
 {       // https://www.cnblogs.com/Jace-Lee/p/5859293.html
@@ -64,6 +75,19 @@ void Editor::undo()
 void Editor::redo()
 {
     QTextEdit::redo();
+}
+
+void Editor::saveStatusSlot()
+{
+    // 如果 文本是 空白文档，我们不做任何事，除了 手动触发 保存（另存为）
+//    if (fileName == "空白文档") {
+//        qDebug() << "文本需要保存";
+//    }
+//    if (!canSave) {
+//        canSave = true;
+
+//        qDebug() << "文本需要保存";
+//    }
 }
 
 
@@ -119,10 +143,10 @@ void Editor::setText(const QString text)
 }
 
 
-void Editor::open(const QString fileName)
+void Editor::open(const QString path)
 {
 
-    QFile file(fileName);
+    QFile file(path);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QString text = file.readAll();
@@ -132,23 +156,24 @@ void Editor::open(const QString fileName)
 }
 
 
-void Editor::save(const QString fileName)
+void Editor::save(const QString path)
 {
-    QString content = this->toPlainText();
+    QString text = this->toPlainText();
 
-    QFile file(fileName);
+    QFile file(path);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
-    file.write(content.toUtf8());
+    file.write(text.toUtf8());
     file.close();
+//    qDebug() << fileName;
 }
 
 
-void Editor::saveAs(const QString fileName)
+void Editor::saveAs(const QString path)
 {
     QString content = this->toPlainText();
 
-    QFile file(fileName);
+    QFile file(path);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
     file.write(content.toUtf8());
