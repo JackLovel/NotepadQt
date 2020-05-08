@@ -86,6 +86,7 @@ void MainWindow::initUI()
     connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(removeSubTab(int)));
     connect(settingAct, &QAction::triggered, this, &MainWindow::openSettingDialog);
     connect(getEditor(), &QTextEdit::cursorPositionChanged, this, &MainWindow::showStausLineNumber);
+    connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAsSlot);
 
     resize(Util::readSetting("userCustom", "size").toSize());
     move(Util::readSetting("userCustom", "pos").toPoint());
@@ -233,19 +234,22 @@ void MainWindow::saveSlot()
         path = currentFilePath;
     }
 
-    qDebug() << path;
-
     getEditor()->save(path);
     setWindowTitle(path);
 }
 
 void MainWindow::saveAsSlot()
 {
-    QString fileName = QFileDialog
+    QString path = QFileDialog
             ::getSaveFileName(this, "Save as");
 
-    setWindowTitle(fileName);
-    getEditor()->saveAs(fileName);
+    auto fileName = Util::getSplitLast(path, "/");
+    auto index = m_tabWidget->currentIndex();
+
+    getEditor()->saveAs(path);
+    m_tabWidget->setTabText(index, fileName);
+
+    setWindowTitle(path);
 }
 
 void MainWindow::printSlot()

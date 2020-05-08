@@ -145,7 +145,9 @@ void Editor::setText(const QString text)
 
 void Editor::open(const QString path)
 {
-
+    if (path.isEmpty()) {
+        return;
+    }
     QFile file(path);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -158,6 +160,9 @@ void Editor::open(const QString path)
 
 void Editor::save(const QString path)
 {
+    if (path.isEmpty()) {
+        return;
+    }
     QString text = this->toPlainText();
 
     QFile file(path);
@@ -165,12 +170,14 @@ void Editor::save(const QString path)
 
     file.write(text.toUtf8());
     file.close();
-//    qDebug() << fileName;
 }
 
 
 void Editor::saveAs(const QString path)
 {
+    if (path.isEmpty()) {
+        return;
+    }
     QString content = this->toPlainText();
 
     QFile file(path);
