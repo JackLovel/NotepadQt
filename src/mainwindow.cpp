@@ -199,9 +199,11 @@ void MainWindow::openSlot()
         tabName = "空白文档";
     } else {
         index = m_tabWidget->currentIndex();
+
         //
         fileName = Util::getSplitLast(path, separator);
         tabName = fileName;
+        currentFile = fileName;
         // 将 path 写入 recentFiles.ini
         // [path, path]
         Util::setRectFiles(path);
