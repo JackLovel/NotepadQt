@@ -200,17 +200,16 @@ void MainWindow::openSlot()
         fileName = "空白文档";
     } else {
         index = m_tabWidget->currentIndex();
-
         //
         fileName = Util::getSplitLast(path, separator);
-//        tabName = fileName;
         currentFilePath = path;
-        // 将 path 写入 recentFiles.ini
-        // [path, path]
+
         Util::setRectFiles(path);
+
+        getEditor()->filePath = path;
+        getEditor()->fileName = fileName;
     }
 
-//    qDebug() << currentFilePath;
     QString suffix = getEditor()->fileSuffix = path.split(".").last();
     setFileSuffix(suffix);
 
@@ -240,13 +239,14 @@ void MainWindow::saveSlot()
 
 void MainWindow::saveAsSlot()
 {
-    QString path = QFileDialog
-            ::getSaveFileName(this, "Save as");
+    auto path = QFileDialog::getSaveFileName(this, "Save as");
+    getEditor()->saveAs(path);
+    getEditor()->filePath = path;
 
     auto fileName = Util::getSplitLast(path, "/");
-    auto index = m_tabWidget->currentIndex();
+    getEditor()->fileName = fileName;
 
-    getEditor()->saveAs(path);
+    auto index = m_tabWidget->currentIndex();
     m_tabWidget->setTabText(index, fileName);
 
     setWindowTitle(path);
@@ -628,17 +628,13 @@ void MainWindow::autoSaveSlot()
 {
     // 在没有修改的情况下，我们就不需要进行保存操作
     Editor *editor = getEditor();
-    bool canSave = editor->canSave;
     bool check = autoSaveAction->isChecked();
-    if (check) {
-        if (canSave) {
-//            qDebug() << "当前的文本" << currentFilePath;
-//            QString file = currentFilePath;
-//            getEditor()->save(file);
-//            editor->canSave = false;
-//            qDebug() << "文本需要保存" << canSave;
-        } else {
-//            qDebug() << "文本已经保存" << canSave;
-        }
+    auto path = editor->filePath;
+
+    if (path == " " || !check) {
+        return;
+    } else {
+        // 进行保存操作
+        getEditor()->save(path);
     }
 }

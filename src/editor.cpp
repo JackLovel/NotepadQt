@@ -3,8 +3,6 @@
 Editor::Editor(QWidget *parent) : QTextEdit(parent)
 {
     setup();
-
-//    canSave
 }
 
 
@@ -16,21 +14,20 @@ Editor::~Editor()
 
 void Editor::setup()
 {
-    fileSuffix = " "; // init file suffix
+    fileSuffix = " "; // 初始化文件后缀
     fileName = "空白文档";
     filePath = " ";
 
     setAcceptDrops(false);
 
-    // default tab width is 4
+    // 默认的 tab 为 4
     setTabWidth(4);
 
-    connect(this, &QTextEdit::textChanged, this, &Editor::saveStatusSlot);
+//    connect(this, &QTextEdit::textChanged, this, &Editor::saveStatusSlot);
 }
 
 void Editor::wheelEvent(QWheelEvent *e)
-{       // https://www.cnblogs.com/Jace-Lee/p/5859293.html
-        // ctrl + 滚轮
+{
         if ((QApplication::keyboardModifiers() == Qt::ControlModifier )
                 && (e->delta() > 0))
         {
@@ -76,20 +73,6 @@ void Editor::redo()
 {
     QTextEdit::redo();
 }
-
-void Editor::saveStatusSlot()
-{
-    // 如果 文本是 空白文档，我们不做任何事，除了 手动触发 保存（另存为）
-//    if (fileName == "空白文档") {
-//        qDebug() << "文本需要保存";
-//    }
-//    if (!canSave) {
-//        canSave = true;
-
-//        qDebug() << "文本需要保存";
-//    }
-}
-
 
 void Editor::setFontUnderline()
 {

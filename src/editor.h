@@ -56,7 +56,6 @@ public slots:
     void paste();
     void undo();
     void redo();
-    void saveStatusSlot();
 
 private:
     bool boldDone = false;
