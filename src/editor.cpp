@@ -22,8 +22,6 @@ void Editor::setup()
 
     // 默认的 tab 为 4
     setTabWidth(4);
-
-//    connect(this, &QTextEdit::textChanged, this, &Editor::saveStatusSlot);
 }
 
 void Editor::wheelEvent(QWheelEvent *e)
