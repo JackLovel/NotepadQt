@@ -56,6 +56,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void loadRectFiles();
+
 protected:
     void closeEvent(QCloseEvent *e) override;
     void dragEnterEvent(QDragEnterEvent *e) override; // 拖动
@@ -80,6 +82,7 @@ public slots:
    void replaceAll(QString, QString, bool);
    void setCustomConfig();
    void goLineSlot(int);
+   void autoSaveSlot();
 
    //
    void setTabToWidth(QString);
@@ -88,7 +91,7 @@ private:
     bool find;
     QSystemTrayIcon *systemTray;
     QTabWidget *m_tabWidget;
-    QString currentFile;
+    QString currentFilePath;
     QLabel *lineNumberLabel;  // 行号显示
     FindDialog *findDialog;
     ReplaceDialog *replaceDialog;
@@ -100,6 +103,7 @@ private:
     bool boldDone = false;
     bool italicDone = false;
     bool underLineDone = false;
+    int saveTime;
 
     QAction *newAct;
     QAction *exitAct;
@@ -121,6 +125,7 @@ private:
     QAction *updateAct;
     QAction *findAct;
     QAction *replaceAction;
+    QAction *autoSaveAction;
 
     void initTray();
     void initUI();
@@ -130,6 +135,10 @@ private:
     void setDefaultKey();
 
     QString  settingFile = QDir::currentPath() + "/setting.ini";
+    QMenu *recentFileMenu;
+
+    // debug
+    void debug();
 };
 
 #endif // MAINWINDOW_H

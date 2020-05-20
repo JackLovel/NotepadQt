@@ -12,6 +12,9 @@
 #include <QJsonArray>
 #include <QDebug>
 #include <QVariant>
+#include <QDesktopWidget>
+#include <QMap>
+#include <QApplication>
 
 void Util::loadStyleSheet(const QString &styleSheetFile, QWidget *widget)
 {
@@ -141,3 +144,57 @@ bool Util::configExist(QString configName)
     return false;
 }
 
+// 获取桌面的分辨率
+QMap<int, int> GetScreenResolution() {
+    QMap<int, int> map;
+
+    QDesktopWidget* desktop = QApplication::desktop();
+    int width = desktop->width();
+    int height = desktop->height();
+    map[width] = height;
+
+    return map;
+}
+
+QString Util::getProjectDir() {
+    return QDir::currentPath();
+}
+
+QString Util::getSplitLast(QString string, QString separator)
+{
+    return string.split(separator).last();
+}
+
+// 读取配置文件
+QMap<QString, QString> Util::getRectFiles()
+{
+    QMap<QString, QString> map;
+    QString file = "recentFiles.ini";
+    QString  settingFile = getProjectDir() + "/" + file;
+
+    QSettings setting(settingFile, QSettings::IniFormat);
+    const QString group = "RectFile";
+    setting.beginGroup(group);
+    for(int i = 0; i < setting.allKeys().length(); i++) {
+        QString k = setting.allKeys().at(i);
+        QString v = setting.value(k).toString();
+        map[k] = v;
+    }
+    setting.endGroup();
+
+    return map;
+}
+
+
+void Util::setRectFiles(const QString &path)
+{
+
+    QString file = "recentFiles.ini";
+    QString  settingFile = getProjectDir() + "/" + file;
+    QSettings setting(settingFile, QSettings::IniFormat);
+
+    const QString group = "RectFile";
+    setting.beginGroup(group);
+    setting.setValue(path, path);
+    setting.endGroup();
+}

@@ -27,14 +27,19 @@ public:
     void setFontItalic();
     void setFontBold();
 
-    void open(const QString fileName);
-    void save(const QString fileName);
-    void saveAs(const QString fileName);
+    void open(const QString path);
+    void save(const QString path);
+    void saveAs(const QString path);
     QMap<QString, QString> showTextRowAndCol();
     void setFontSize(QString fontSize);
     void setTabWidth(int length);
+    void setup();
 
     QString fileSuffix;
+    bool canSave = false; // 默认的，是不需要保存
+
+    QString fileName;
+    QString filePath;
 
 signals:
     void cursorPositionChanged();

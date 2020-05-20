@@ -86,6 +86,7 @@ void MainWindow::initUI()
     connect(m_tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(removeSubTab(int)));
     connect(settingAct, &QAction::triggered, this, &MainWindow::openSettingDialog);
     connect(getEditor(), &QTextEdit::cursorPositionChanged, this, &MainWindow::showStausLineNumber);
+    connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAsSlot);
 
     resize(Util::readSetting("userCustom", "size").toSize());
     move(Util::readSetting("userCustom", "pos").toPoint());
@@ -145,10 +146,26 @@ void MainWindow::initUI()
     setWindowTitle(tr("Notepad"));
     setCentralWidget(m_tabWidget);
 
-//    qDebug() << Util::getKeyMap();
     connect(tabSizeCombox, SIGNAL(activated(QString)), this, SLOT(setTabToWidth(QString)));
 
 
+    recentFileMenu = new QMenu("最近的文件");
+    loadRectFiles();
+    menuBar()->addMenu(recentFileMenu);
+
+    autoSaveAction = new QAction("自动保存");
+    autoSaveAction->setCheckable(true);
+    autoSaveAction->setChecked(false);
+    fileMenu->addAction(autoSaveAction);
+    // 计时器
+    QTimer *fTimer=new QTimer(this);
+    saveTime = 1000; // 1s
+//    canSave = false;
+    fTimer->start();
+    fTimer->setInterval (saveTime) ;//设置定时周期，单位：毫秒
+    connect(fTimer, &QTimer::timeout, this, &MainWindow::autoSaveSlot);
+//    connect(fTimer,SIGNAL(timeout()),this,SLOT(on_timer_timeout()));
+    // 每过1秒（或者2s），保存一次（触发保存函数）
 }
 
 void MainWindow::exitSlot()
@@ -163,62 +180,76 @@ Editor* MainWindow::getEditor(){
 
 void MainWindow::setFileSuffix(QString suffix)
 {
-    qDebug() << Util::getFileTypeMap();
-
     QString description = Util::getFileTypeMap()[suffix];
-
-    qDebug() << description;
     fileTypeLabel->setText(description);
 }
 
 void MainWindow::openSlot()
 {
-    QString tabName;
+    QString fileName = "";
+//    QString tabName = "";
+    QString separator = "/";
     int index;
 
-    QString fileName = QFileDialog::getOpenFileName(this,
+    QString path = QFileDialog::getOpenFileName(this,
                                                     "open file");
-    getEditor()->open(fileName);
+    getEditor()->open(path);
 
-    if (fileName.isEmpty()) {
+    if (path.isEmpty()) {
         index = 0;
-        tabName = "空白文档";
+        fileName = "空白文档";
     } else {
         index = m_tabWidget->currentIndex();
-        tabName = fileName.split("/").last();
+        //
+        fileName = Util::getSplitLast(path, separator);
+        currentFilePath = path;
+
+        Util::setRectFiles(path);
+
+        getEditor()->filePath = path;
+        getEditor()->fileName = fileName;
     }
 
-    QString suffix = getEditor()->fileSuffix = fileName.split(".").last();
-    //qDebug() << suffix;
+    QString suffix = getEditor()->fileSuffix = path.split(".").last();
     setFileSuffix(suffix);
 
-    m_tabWidget->setTabText(index, tabName);
+    m_tabWidget->setTabText(index, fileName);
+}
+
+void MainWindow::debug() {
+
 }
 
 void MainWindow::saveSlot()
 {
-    QString fileName;
-    if (currentFile.isEmpty())
+    QString path;
+    if (currentFilePath.isEmpty())
     {
-        fileName = QFileDialog::getSaveFileName(this, "保存");
-        currentFile = fileName;
+        path = QFileDialog::getSaveFileName(this, "保存");
+        currentFilePath = path;
     }
     else
     {
-        fileName = currentFile;
+        path = currentFilePath;
     }
 
-    getEditor()->save(fileName);
-    setWindowTitle(fileName);
+    getEditor()->save(path);
+    setWindowTitle(path);
 }
 
 void MainWindow::saveAsSlot()
 {
-    QString fileName = QFileDialog
-            ::getSaveFileName(this, "Save as");
+    auto path = QFileDialog::getSaveFileName(this, "Save as");
+    getEditor()->saveAs(path);
+    getEditor()->filePath = path;
 
-    setWindowTitle(fileName);
-    getEditor()->saveAs(fileName);
+    auto fileName = Util::getSplitLast(path, "/");
+    getEditor()->fileName = fileName;
+
+    auto index = m_tabWidget->currentIndex();
+    m_tabWidget->setTabText(index, fileName);
+
+    setWindowTitle(path);
 }
 
 void MainWindow::printSlot()
@@ -260,8 +291,8 @@ void MainWindow::initTray()
     systemTray->setContextMenu(trayMenu);
     systemTray->show();
 
-    connect(systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
+    connect(systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 
@@ -563,8 +594,47 @@ void MainWindow::setTabToWidth(QString widthText)
     e->setTabWidth(tabWidth);
 }
 
+void MainWindow::loadRectFiles()
+{
+    auto maps = Util::getRectFiles();
+    for(auto k: maps.keys())
+    {
+        auto v = maps[k];
+        recentFileMenu->addAction(QString("%2").arg(v));
+    }
 
+    // 绑定事件
+    auto actionList = recentFileMenu->actions();
+    for(auto a : actionList) {
+        connect(a, &QAction::triggered, [=]{
 
+           // 要处理的事件
+           auto path = a->text();
+           auto fileName = Util::getSplitLast(path, "/");
 
+           Editor *editor = new Editor;
+           auto content = Util::readFile(path);
+           editor->setText(content);
 
+           m_tabWidget->addTab(editor, fileName);
 
+           auto index = m_tabWidget->count() - 1;
+           m_tabWidget->setCurrentIndex(index);
+        });
+    }
+}
+
+void MainWindow::autoSaveSlot()
+{
+    // 在没有修改的情况下，我们就不需要进行保存操作
+    Editor *editor = getEditor();
+    bool check = autoSaveAction->isChecked();
+    auto path = editor->filePath;
+
+    if (path == " " || !check) {
+        return;
+    } else {
+        // 进行保存操作
+        getEditor()->save(path);
+    }
+}

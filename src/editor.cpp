@@ -2,12 +2,7 @@
 
 Editor::Editor(QWidget *parent) : QTextEdit(parent)
 {
-    fileSuffix = " "; // init file suffix
-
-    setAcceptDrops(false);
-
-    // default tab width is 4
-    setTabWidth(4);
+    setup();
 }
 
 
@@ -17,9 +12,20 @@ Editor::~Editor()
 }
 
 
+void Editor::setup()
+{
+    fileSuffix = " "; // 初始化文件后缀
+    fileName = "空白文档";
+    filePath = " ";
+
+    setAcceptDrops(false);
+
+    // 默认的 tab 为 4
+    setTabWidth(4);
+}
+
 void Editor::wheelEvent(QWheelEvent *e)
-{       // https://www.cnblogs.com/Jace-Lee/p/5859293.html
-        // ctrl + 滚轮
+{
         if ((QApplication::keyboardModifiers() == Qt::ControlModifier )
                 && (e->delta() > 0))
         {
@@ -65,7 +71,6 @@ void Editor::redo()
 {
     QTextEdit::redo();
 }
-
 
 void Editor::setFontUnderline()
 {
@@ -119,10 +124,12 @@ void Editor::setText(const QString text)
 }
 
 
-void Editor::open(const QString fileName)
+void Editor::open(const QString path)
 {
-
-    QFile file(fileName);
+    if (path.isEmpty()) {
+        return;
+    }
+    QFile file(path);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QString text = file.readAll();
@@ -132,23 +139,29 @@ void Editor::open(const QString fileName)
 }
 
 
-void Editor::save(const QString fileName)
+void Editor::save(const QString path)
 {
-    QString content = this->toPlainText();
+    if (path.isEmpty()) {
+        return;
+    }
+    QString text = this->toPlainText();
 
-    QFile file(fileName);
+    QFile file(path);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
-    file.write(content.toUtf8());
+    file.write(text.toUtf8());
     file.close();
 }
 
 
-void Editor::saveAs(const QString fileName)
+void Editor::saveAs(const QString path)
 {
+    if (path.isEmpty()) {
+        return;
+    }
     QString content = this->toPlainText();
 
-    QFile file(fileName);
+    QFile file(path);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
     file.write(content.toUtf8());

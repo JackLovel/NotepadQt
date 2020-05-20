@@ -17,6 +17,7 @@ CONFIG += c++11
 
 SOURCES += \
         advancesettingpage.cpp \
+#        config.cpp \
         contact.cpp \
         content.cpp \
         editor.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 
 HEADERS += \
         advancesettingpage.h \
+        config.h \
         contact.h \
         content.h \
         editor.h \
