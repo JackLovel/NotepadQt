@@ -1,8 +1,0 @@
-** Install (for Debian)                                                                      
-
-- download 
-  [[https://gitee.com/wcc210/Notepad/releases][link page]]
-- install 
-#+BEGIN_SRC 
-$ sudo dpkg -i notepad_1.0.0_amd64.deb
-#+END_SRC
