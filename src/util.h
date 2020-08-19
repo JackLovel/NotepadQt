@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QDir>
 #include <QSettings>
+#include <QGuiApplication>
+#include <QScreen>
 
 class Util : public QObject
 {
@@ -31,9 +33,9 @@ public:
     static QMap<QString, QString> getRectFiles();
     static void setRectFiles(const QString &path);
 
-
     // 字符串处理
     static QString getSplitLast(QString string, QString separator);
+    static QSize desktopSize();
 };
 
 #endif // UTIL_H
