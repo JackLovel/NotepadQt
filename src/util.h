@@ -36,6 +36,8 @@ public:
     // 字符串处理
     static QString getSplitLast(QString string, QString separator);
     static QSize desktopSize();
+    static QVariant getStatusSetting(const QString &key);
+    static QVariant putStatusSetting(const QString &key, const QString &value);
 };
 
 #endif // UTIL_H

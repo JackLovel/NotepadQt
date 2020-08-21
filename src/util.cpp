@@ -51,6 +51,16 @@ QVariant Util::readSetting(const QString &group, const QString &key)
     return value;
 }
 
+QVariant Util::getStatusSetting(const QString &key)
+{
+    return Util::readSetting("status", key);
+}
+
+QVariant Util::putStatusSetting(const QString &key, const QString &value)
+{
+    Util::writeSetting("status", key, value);
+}
+
 QString Util::readFile(const QString &fileName)
 {
     QFile file(fileName);
