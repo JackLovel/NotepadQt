@@ -144,18 +144,6 @@ bool Util::configExist(QString configName)
     return false;
 }
 
-// 获取桌面的分辨率
-QMap<int, int> GetScreenResolution() {
-    QMap<int, int> map;
-
-    QDesktopWidget* desktop = QApplication::desktop();
-    int width = desktop->width();
-    int height = desktop->height();
-    map[width] = height;
-
-    return map;
-}
-
 QString Util::getProjectDir() {
     return QDir::currentPath();
 }
@@ -188,7 +176,6 @@ QMap<QString, QString> Util::getRectFiles()
 
 void Util::setRectFiles(const QString &path)
 {
-
     QString file = "recentFiles.ini";
     QString  settingFile = getProjectDir() + "/" + file;
     QSettings setting(settingFile, QSettings::IniFormat);
@@ -197,4 +184,15 @@ void Util::setRectFiles(const QString &path)
     setting.beginGroup(group);
     setting.setValue(path, path);
     setting.endGroup();
+}
+
+// 获取桌面的分辨率
+QSize Util::desktopSize() {
+
+    auto desktop = QGuiApplication::screens()
+            .first()->grabWindow(0);
+
+    QSize size = desktop.size();
+
+    return size;
 }
