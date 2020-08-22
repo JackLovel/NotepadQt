@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "config.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -318,11 +319,11 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::aboutDialogSlot()
 {
-    QMessageBox::about(this,
-                       tr("关于"),
-                       tr( "一个记事本<br>"
-                           "作者：叶落初冬<br>"
-                           "版本: &nbsp;&nbsp;v1.0"));
+    QMessageBox::about(this,tr("关于"),tr( "%1<br>""作者：%2<br>"
+        "邮箱: %3<br>""版本: &nbsp;&nbsp;%4<br>"
+        "qt: %5<br>").arg(APP_DESCRIPTIONO)
+                     .arg(AUTHOR).arg(EMAIL)
+                     .arg(APP_VERSION).arg(QT_VERSION));
 }
 
 void MainWindow::removeSubTab(int index)
