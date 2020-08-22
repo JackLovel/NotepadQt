@@ -58,6 +58,7 @@ public:
 
     void loadRectFiles();
 
+    void initStatus();
 protected:
     void closeEvent(QCloseEvent *e) override;
     void dragEnterEvent(QDragEnterEvent *e) override; // 拖动
@@ -135,6 +136,7 @@ private:
     void setDefaultKey();
 
     QString  settingFile = QDir::currentPath() + "/setting.ini";
+
     QMenu *recentFileMenu;
 
     // debug

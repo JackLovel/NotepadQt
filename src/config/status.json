@@ -1,6 +1,7 @@
 {
-    "defaultStatus": 
-    {
-        "noUse": true  
-    }
+    "defaultStatus":[
+	{
+	    "key": "noUse",
+	    "default": "true"
+        }]
 }

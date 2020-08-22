@@ -37,7 +37,10 @@ public:
     static QString getSplitLast(QString string, QString separator);
     static QSize desktopSize();
     static QVariant getStatusSetting(const QString &key);
-    static QVariant putStatusSetting(const QString &key, const QString &value);
+    static void putStatusSetting(const QString &key, const QString &value);
+
+    //
+    static QMap<QString, QString> readStatus();
 };
 
 #endif // UTIL_H

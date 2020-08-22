@@ -4,5 +4,6 @@
         <file>style/style.qss</file>
         <file>config/setting.json</file>
         <file>config/filetype.json</file>
+        <file>config/status.json</file>
     </qresource>
 </RCC>
