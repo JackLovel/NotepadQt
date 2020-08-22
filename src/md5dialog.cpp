@@ -89,7 +89,7 @@ void Md5Dialog::getMd5FileSlot()
 
     file.close();
     QString md5Value = hash.result().toHex();
-    qDebug() << md5Value;
+    // qDebug() << md5Value;
 
     return;
 }

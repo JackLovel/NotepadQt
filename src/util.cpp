@@ -51,6 +51,16 @@ QVariant Util::readSetting(const QString &group, const QString &key)
     return value;
 }
 
+QVariant Util::getStatusSetting(const QString &key)
+{
+    return Util::readSetting("status", key);
+}
+
+void Util::putStatusSetting(const QString &key, const QString &value)
+{
+    Util::writeSetting("status", key, value);
+}
+
 QString Util::readFile(const QString &fileName)
 {
     QFile file(fileName);
@@ -195,4 +205,10 @@ QSize Util::desktopSize() {
     QSize size = desktop.size();
 
     return size;
+}
+
+static QString statusFile = ":/config/status.json";
+QMap<QString, QString> Util::readStatus()
+{
+    return Util::readJsonFile(statusFile, "defaultStatus");
 }

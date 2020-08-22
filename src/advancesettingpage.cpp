@@ -1,5 +1,7 @@
 #include "advancesettingpage.h"
 
+#include <QCheckBox>
+
 AdvanceSettingPage::AdvanceSettingPage(QWidget *parent) : QWidget(parent)
 {
     QGridLayout *layout = new QGridLayout(this);
@@ -58,6 +60,10 @@ AdvanceSettingPage::AdvanceSettingPage(QWidget *parent) : QWidget(parent)
 
     layout->setSpacing(15);
     layout->setMargin(10);
+
+//    QCheckBox *exitBox = new QCheckBox();
+//    exitBox->setText("ESC exit app");
+//    layout->addWidget(exitBox);
 }
 
 AdvanceSettingPage::~AdvanceSettingPage()

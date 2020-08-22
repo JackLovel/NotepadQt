@@ -142,6 +142,7 @@ void MainWindow::initUI()
 
     initTray();
     initShortCutKey();
+    initStatus();
     initStatusBar();
     setWindowTitle(tr("Notepad"));
     setCentralWidget(m_tabWidget);
@@ -356,6 +357,21 @@ void MainWindow::setDefaultKey()
     saveAct->setShortcut(keyMap[saveAct->objectName()]);
 }
 
+void MainWindow::initStatus() {
+    QMap<QString, QString> statusMap = Util::readStatus();
+    QSettings setting(settingFile, QSettings::IniFormat);
+    setting.beginGroup("status");
+    // 如果不包含自定义配置，那就使用默认配置
+
+    if (setting.contains("noUse")) {
+        return;
+    }
+    for (auto k : statusMap.keys()) {
+        auto v = statusMap[k];
+        setting.setValue(k, v);
+    }
+    setting.endGroup();
+}
 void MainWindow::initShortCutKey()
 {
     QSettings setting(settingFile, QSettings::IniFormat);

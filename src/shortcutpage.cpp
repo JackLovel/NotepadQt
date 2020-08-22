@@ -91,7 +91,7 @@ void ShortCutPage::setup()
     QString settingFilePath = QDir::currentPath() + "/setting.ini";
     QSettings setting(settingFilePath, QSettings::IniFormat);
 
-    qDebug() << setting.allKeys().size();
+    // qDebug() << setting.allKeys().size();
     // 如果不存在自定义配置，就使用默认配置
     if (setting.contains("custom/newFile") && setting.contains("custom/redo")) {
         // 如果存在自定义配置，就使用自定义配置
