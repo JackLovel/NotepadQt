@@ -8,6 +8,6 @@
 #define APP_DESCRIPTIONO "一个记事本"
 #define EMAIL "gogkatsu@outlook.com"
 #define APP_VERSION "3.0.0"
-#define QT_VERSION "5.14.1"
+#define QT_CREATOR_VERSION "5.14.1"
 
 #endif // CONFIG_H

@@ -91,9 +91,6 @@ void MainWindow::initUI()
     editMenu->addAction(redoAct);
     editMenu->addAction(fontAct);
 
-    QMenu *helpMenu = menuBar()->addMenu(tr("帮助"));
-    helpMenu->addAction(aboutAct);
-
     QMenu *projectMenu = menuBar()->addMenu(tr("项目"));
     projectMenu->addAction(treeViewAction);
     connect(treeViewAction, &QAction::triggered, this, [&](){
@@ -195,6 +192,9 @@ void MainWindow::initUI()
     recentFileMenu = new QMenu("最近的文件");
     loadRectFiles();
     menuBar()->addMenu(recentFileMenu);
+
+    QMenu *helpMenu = menuBar()->addMenu(tr("帮助"));
+    helpMenu->addAction(aboutAct);
 
     autoSaveAction = new QAction("自动保存");
     autoSaveAction->setCheckable(true);
@@ -364,7 +364,7 @@ void MainWindow::aboutDialogSlot()
         "邮箱: %3<br>""版本: &nbsp;&nbsp;%4<br>"
         "qt: %5<br>").arg(APP_DESCRIPTIONO)
                      .arg(AUTHOR).arg(EMAIL)
-                     .arg(APP_VERSION).arg(QT_VERSION));
+                     .arg(APP_VERSION).arg(QT_CREATOR_VERSION));
 }
 
 void MainWindow::removeSubTab(int index)
