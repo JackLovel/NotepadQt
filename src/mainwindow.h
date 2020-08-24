@@ -141,6 +141,11 @@ private:
 
     // debug
     void debug();
+
+    QTreeView *fileTreeView;
+    QWidget *mainWidget;
+    QHBoxLayout *mainLayout;
+    QAction *treeViewAction;
 };
 
 #endif // MAINWINDOW_H

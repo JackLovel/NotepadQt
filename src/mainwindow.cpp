@@ -5,6 +5,20 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     initUI();
+
+    // treeView
+//    QString dirPath = "/home/gog/桌面/1111/";
+
+//    QFileSystemModel *model = new QFileSystemModel();
+//    model->setRootPath(dirPath); //设置根目录
+//    treeView->setModel(model); //设置数据模型
+//    const QModelIndex rootIndex = model->index(QDir::cleanPath(dirPath));
+//    if (rootIndex.isValid()) {
+//        treeView->setRootIndex(rootIndex);
+//    }
+
+//    connect(treeView,SIGNAL(clicked(QModelIndex)),
+//             this, SLOT(getContent(QModelIndex)));
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +68,10 @@ void MainWindow::initUI()
     settingAct = new QAction("设置", this);
     updateAct = new QAction("更新", this);
 
+    // viewTree
+    treeViewAction = new QAction("open tree view", this);
+    treeViewAction->setShortcut(QString("Ctrl+T"));
+
     QMenu *fileMenu = menuBar()->addMenu(tr("文件"));
     fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
@@ -75,6 +93,20 @@ void MainWindow::initUI()
 
     QMenu *helpMenu = menuBar()->addMenu(tr("帮助"));
     helpMenu->addAction(aboutAct);
+
+    QMenu *projectMenu = menuBar()->addMenu(tr("项目"));
+    projectMenu->addAction(treeViewAction);
+    connect(treeViewAction, &QAction::triggered, this, [&](){
+       bool isVisible = fileTreeView->isVisible();
+       if (isVisible) {
+           isVisible = false;
+       } else {
+           isVisible = true;
+       }
+
+       fileTreeView->setVisible(isVisible);
+    });
+
 
     connect(exitAct, &QAction::triggered, this, &MainWindow::exitSlot);
     connect(aboutAct, &QAction::triggered, this, &MainWindow::aboutDialogSlot);
@@ -146,7 +178,16 @@ void MainWindow::initUI()
     initStatus();
     initStatusBar();
     setWindowTitle(tr("Notepad"));
-    setCentralWidget(m_tabWidget);
+
+    // treeView
+    // treeView
+    mainWidget = new QWidget();
+    fileTreeView = new QTreeView();
+    fileTreeView->setVisible(false);
+    mainLayout = new QHBoxLayout(mainWidget);
+    mainLayout->addWidget(fileTreeView, 1);
+    mainLayout->addWidget(m_tabWidget, 4);
+    setCentralWidget(mainWidget);
 
     connect(tabSizeCombox, SIGNAL(activated(QString)), this, SLOT(setTabToWidth(QString)));
 
