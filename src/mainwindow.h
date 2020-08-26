@@ -88,6 +88,9 @@ public slots:
    //
    void setTabToWidth(QString);
 
+   // treeView
+   void openFileTreeView(const QModelIndex &index);
+
 private:
     bool find;
     QSystemTrayIcon *systemTray;
@@ -127,6 +130,12 @@ private:
     QAction *findAct;
     QAction *replaceAction;
     QAction *autoSaveAction;
+
+    // treeview, open folder
+    QAction *openFolderAct;
+    QFileSystemModel fileSystemModel;
+
+    const QString treeViewPath = nullptr;
 
     void initTray();
     void initUI();

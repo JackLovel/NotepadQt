@@ -21,6 +21,7 @@ SOURCES += \
         contact.cpp \
         content.cpp \
         editor.cpp \
+    filetreeview.cpp \
         finddialog.cpp \
         golinedialog.cpp \
         main.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
         contact.h \
         content.h \
         editor.h \
+        filetreeview.h \
         finddialog.h \
         golinedialog.h \
         mainwindow.h \

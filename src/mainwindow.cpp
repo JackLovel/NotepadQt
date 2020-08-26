@@ -68,6 +68,8 @@ void MainWindow::initUI()
     settingAct = new QAction("设置", this);
     updateAct = new QAction("更新", this);
 
+    openFolderAct = new QAction("open folder", this);
+
     // viewTree
     treeViewAction = new QAction("open tree view", this);
     treeViewAction->setShortcut(QString("Ctrl+T"));
@@ -81,6 +83,7 @@ void MainWindow::initUI()
     fileMenu->addSeparator();
     fileMenu->addAction(settingAct);
     fileMenu->addAction(exitAct);
+    fileMenu->addAction(openFolderAct);
 
     QMenu *editMenu = menuBar()->addMenu(tr("编辑"));
     editMenu->addAction(copyAct);
@@ -117,6 +120,18 @@ void MainWindow::initUI()
     connect(settingAct, &QAction::triggered, this, &MainWindow::openSettingDialog);
     connect(getEditor(), &QTextEdit::cursorPositionChanged, this, &MainWindow::showStausLineNumber);
     connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAsSlot);
+    connect(openFolderAct, &QAction::triggered, this, [&]() {
+//        QString folder = QFileDialog::
+        QString folder = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                         "/home",
+                                                         QFileDialog::ShowDirsOnly
+                                                         | QFileDialog::DontResolveSymlinks);
+
+
+        qDebug() << "folder:" << folder;
+
+        // load project tree view function
+    });
 
     resize(Util::readSetting("userCustom", "size").toSize());
     move(Util::readSetting("userCustom", "pos").toPoint());
@@ -177,10 +192,20 @@ void MainWindow::initUI()
     setWindowTitle(tr("Notepad"));
 
     // treeView
-    // treeView
+    fileSystemModel.setRootPath(treeViewPath);
+
     mainWidget = new QWidget();
     fileTreeView = new QTreeView();
     fileTreeView->setVisible(false);
+
+    if (!treeViewPath.isEmpty()) {
+        fileTreeView->setModel(&fileSystemModel);
+        const QModelIndex rootIndex = fileSystemModel.index(QDir::cleanPath(treeViewPath));
+        if (rootIndex.isValid()) {
+            fileTreeView->setRootIndex(rootIndex);
+        }
+    }
+    connect(fileTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(openFileTreeView(QModelIndex)));
     mainLayout = new QHBoxLayout(mainWidget);
     mainLayout->addWidget(fileTreeView, 1);
     mainLayout->addWidget(m_tabWidget, 4);
@@ -211,6 +236,25 @@ void MainWindow::initUI()
     // 每过1秒（或者2s），保存一次（触发保存函数）
 }
 
+void MainWindow::openFileTreeView(const QModelIndex &index)
+{
+    QString path = fileSystemModel.filePath(index);
+    QFileInfo info(path);
+    QString name = info.fileName();
+    QString suffix = info.suffix();
+    QString content;
+    if (suffix == "png" || suffix == "jpg") {
+        content = "can't open this";
+    } else {
+        content = Util::readFile(path);
+    }
+
+    Editor *e = getEditor();
+    e->setText(content);
+    int currentIndex = m_tabWidget->currentIndex();
+    m_tabWidget->setTabText(currentIndex, name);
+}
+
 void MainWindow::exitSlot()
 {
     qApp->quit();
@@ -236,6 +280,8 @@ void MainWindow::openSlot()
 
     QString path = QFileDialog::getOpenFileName(this,
                                                     "open file");
+
+    qDebug() << "current file path" << path;
     getEditor()->open(path);
 
     if (path.isEmpty()) {
