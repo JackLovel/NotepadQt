@@ -135,7 +135,7 @@ private:
     QAction *openFolderAct;
     QFileSystemModel fileSystemModel;
 
-    const QString treeViewPath = nullptr;
+    QString treeViewPath = nullptr;
 
     void initTray();
     void initUI();

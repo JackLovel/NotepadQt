@@ -121,16 +121,24 @@ void MainWindow::initUI()
     connect(getEditor(), &QTextEdit::cursorPositionChanged, this, &MainWindow::showStausLineNumber);
     connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAsSlot);
     connect(openFolderAct, &QAction::triggered, this, [&]() {
-//        QString folder = QFileDialog::
         QString folder = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                          "/home",
                                                          QFileDialog::ShowDirsOnly
                                                          | QFileDialog::DontResolveSymlinks);
 
-
-        qDebug() << "folder:" << folder;
-
         // load project tree view function
+        // need factor code
+        treeViewPath = folder;
+        fileSystemModel.setRootPath(treeViewPath);
+        fileTreeView->setVisible(true);
+
+        if (!treeViewPath.isEmpty()) {
+            fileTreeView->setModel(&fileSystemModel);
+            const QModelIndex rootIndex = fileSystemModel.index(QDir::cleanPath(treeViewPath));
+            if (rootIndex.isValid()) {
+                fileTreeView->setRootIndex(rootIndex);
+            }
+        }
     });
 
     resize(Util::readSetting("userCustom", "size").toSize());
