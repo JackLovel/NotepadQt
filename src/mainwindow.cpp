@@ -5,20 +5,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     initUI();
-
-    // treeView
-//    QString dirPath = "/home/gog/桌面/1111/";
-
-//    QFileSystemModel *model = new QFileSystemModel();
-//    model->setRootPath(dirPath); //设置根目录
-//    treeView->setModel(model); //设置数据模型
-//    const QModelIndex rootIndex = model->index(QDir::cleanPath(dirPath));
-//    if (rootIndex.isValid()) {
-//        treeView->setRootIndex(rootIndex);
-//    }
-
-//    connect(treeView,SIGNAL(clicked(QModelIndex)),
-//             this, SLOT(getContent(QModelIndex)));
 }
 
 MainWindow::~MainWindow()
@@ -128,17 +114,9 @@ void MainWindow::initUI()
 
         // load project tree view function
         // need factor code
-        treeViewPath = folder;
-        fileSystemModel.setRootPath(treeViewPath);
+        fileTreeView->path = folder;
         fileTreeView->setVisible(true);
-
-        if (!treeViewPath.isEmpty()) {
-            fileTreeView->setModel(&fileSystemModel);
-            const QModelIndex rootIndex = fileSystemModel.index(QDir::cleanPath(treeViewPath));
-            if (rootIndex.isValid()) {
-                fileTreeView->setRootIndex(rootIndex);
-            }
-        }
+        fileTreeView->loadView();
     });
 
     resize(Util::readSetting("userCustom", "size").toSize());
@@ -203,17 +181,10 @@ void MainWindow::initUI()
     fileSystemModel.setRootPath(treeViewPath);
 
     mainWidget = new QWidget();
-    fileTreeView = new QTreeView();
-    fileTreeView->setVisible(false);
 
-    if (!treeViewPath.isEmpty()) {
-        fileTreeView->setModel(&fileSystemModel);
-        const QModelIndex rootIndex = fileSystemModel.index(QDir::cleanPath(treeViewPath));
-        if (rootIndex.isValid()) {
-            fileTreeView->setRootIndex(rootIndex);
-        }
-    }
+    fileTreeView = new FileTreeView();
     connect(fileTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(openFileTreeView(QModelIndex)));
+
     mainLayout = new QHBoxLayout(mainWidget);
     mainLayout->addWidget(fileTreeView, 1);
     mainLayout->addWidget(m_tabWidget, 4);
@@ -246,7 +217,7 @@ void MainWindow::initUI()
 
 void MainWindow::openFileTreeView(const QModelIndex &index)
 {
-    QString path = fileSystemModel.filePath(index);
+    QString path =  fileTreeView->model.filePath(index);
     QFileInfo info(path);
     QString name = info.fileName();
     QString suffix = info.suffix();
@@ -256,6 +227,8 @@ void MainWindow::openFileTreeView(const QModelIndex &index)
     } else {
         content = Util::readFile(path);
     }
+
+    qDebug() << "path" << path << "content" << content;
 
     Editor *e = getEditor();
     e->setText(content);

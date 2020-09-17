@@ -1,14 +1,30 @@
 #include "filetreeview.h"
 #include <QTextCodec>
 
-FileTreeVIew::FileTreeVIew()
+FileTreeView::FileTreeView()
 {
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
-    model = new QStandardItemModel(4, 2);
+    this->setVisible(false);
+
+    loadView();
+}
+
+FileTreeView::~FileTreeView()
+{
 
 }
 
-void FileTreeVIew::mouseDoubleClickEvent(QMouseEvent *event)
+// load view
+void FileTreeView::loadView()
 {
-
+    model.setRootPath(path);
+    if (!path.isEmpty()) {
+        this->setModel(&model);
+        const QModelIndex rootIndex = model.index(QDir::cleanPath(path));
+        if (rootIndex.isValid()) {
+            this->setRootIndex(rootIndex);
+        }
+    }
 }
+
+
+

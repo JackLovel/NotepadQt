@@ -1,23 +1,27 @@
-#ifndef FILETREEVIEW_H
-#define FILETREEVIEW_H
+#ifndef FileTreeView_H
+#define FileTreeView_H
 
 #include <QObject>
 #include <QStandardItem>
 #include <QTreeView>
+#include <QFileSystemModel>
 
-class FileTreeVIew : public QTreeView
+class FileTreeView : public QTreeView
 {
     Q_OBJECT
 public:
-    FileTreeVIew();
-    void iterateOverItems();
-    QList<QStandardItem*> returnThenItems;
+    FileTreeView();
+    ~FileTreeView();
+
+    QString path = nullptr;
+    QFileSystemModel model;
+
+    void loadView();
 
 protected:
-    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private:
-    QStandardItemModel *model;
+
 };
 
-#endif // FILETREEVIEW_H
+#endif // FileTreeView_H

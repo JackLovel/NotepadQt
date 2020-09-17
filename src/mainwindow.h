@@ -9,6 +9,7 @@
 #include "replacedialog.h"
 #include "golinedialog.h"
 #include "md5dialog.h"
+#include "filetreeview.h"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -151,7 +152,9 @@ private:
     // debug
     void debug();
 
-    QTreeView *fileTreeView;
+    // load tree view
+//    QTreeView *fileTreeView;
+    FileTreeView *fileTreeView;
     QWidget *mainWidget;
     QHBoxLayout *mainLayout;
     QAction *treeViewAction;
