@@ -9,6 +9,7 @@
 #include "replacedialog.h"
 #include "golinedialog.h"
 #include "md5dialog.h"
+#include "filetreeview.h"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -88,6 +89,9 @@ public slots:
    //
    void setTabToWidth(QString);
 
+   // treeView
+   void openFileTreeView(const QModelIndex &index);
+
 private:
     bool find;
     QSystemTrayIcon *systemTray;
@@ -128,6 +132,12 @@ private:
     QAction *replaceAction;
     QAction *autoSaveAction;
 
+    // treeview, open folder
+    QAction *openFolderAct;
+    QFileSystemModel fileSystemModel;
+
+    QString treeViewPath = nullptr;
+
     void initTray();
     void initUI();
     void initStatusBar();
@@ -141,6 +151,13 @@ private:
 
     // debug
     void debug();
+
+    // load tree view
+//    QTreeView *fileTreeView;
+    FileTreeView *fileTreeView;
+    QWidget *mainWidget;
+    QHBoxLayout *mainLayout;
+    QAction *treeViewAction;
 };
 
 #endif // MAINWINDOW_H

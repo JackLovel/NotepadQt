@@ -54,6 +54,12 @@ void MainWindow::initUI()
     settingAct = new QAction("设置", this);
     updateAct = new QAction("更新", this);
 
+    openFolderAct = new QAction("open folder", this);
+
+    // viewTree
+    treeViewAction = new QAction("open tree view", this);
+    treeViewAction->setShortcut(QString("Ctrl+T"));
+
     QMenu *fileMenu = menuBar()->addMenu(tr("文件"));
     fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
@@ -63,6 +69,7 @@ void MainWindow::initUI()
     fileMenu->addSeparator();
     fileMenu->addAction(settingAct);
     fileMenu->addAction(exitAct);
+    fileMenu->addAction(openFolderAct);
 
     QMenu *editMenu = menuBar()->addMenu(tr("编辑"));
     editMenu->addAction(copyAct);
@@ -73,8 +80,19 @@ void MainWindow::initUI()
     editMenu->addAction(redoAct);
     editMenu->addAction(fontAct);
 
-    QMenu *helpMenu = menuBar()->addMenu(tr("帮助"));
-    helpMenu->addAction(aboutAct);
+    QMenu *projectMenu = menuBar()->addMenu(tr("项目"));
+    projectMenu->addAction(treeViewAction);
+    connect(treeViewAction, &QAction::triggered, this, [&](){
+       bool isVisible = fileTreeView->isVisible();
+       if (isVisible) {
+           isVisible = false;
+       } else {
+           isVisible = true;
+       }
+
+       fileTreeView->setVisible(isVisible);
+    });
+
 
     connect(exitAct, &QAction::triggered, this, &MainWindow::exitSlot);
     connect(aboutAct, &QAction::triggered, this, &MainWindow::aboutDialogSlot);
@@ -88,6 +106,18 @@ void MainWindow::initUI()
     connect(settingAct, &QAction::triggered, this, &MainWindow::openSettingDialog);
     connect(getEditor(), &QTextEdit::cursorPositionChanged, this, &MainWindow::showStausLineNumber);
     connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAsSlot);
+    connect(openFolderAct, &QAction::triggered, this, [&]() {
+        QString folderPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                         "/home",
+                                                         QFileDialog::ShowDirsOnly
+                                                         | QFileDialog::DontResolveSymlinks);
+
+        // load project tree view function
+        // need factor code
+        fileTreeView->path = folderPath;
+        fileTreeView->setVisible(true);
+        fileTreeView->loadView();
+    });
 
     resize(Util::readSetting("userCustom", "size").toSize());
     move(Util::readSetting("userCustom", "pos").toPoint());
@@ -146,7 +176,19 @@ void MainWindow::initUI()
     initStatus();
     initStatusBar();
     setWindowTitle(tr("Notepad"));
-    setCentralWidget(m_tabWidget);
+
+    // treeView
+    fileSystemModel.setRootPath(treeViewPath);
+
+    mainWidget = new QWidget();
+
+    fileTreeView = new FileTreeView();
+    connect(fileTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(openFileTreeView(QModelIndex)));
+
+    mainLayout = new QHBoxLayout(mainWidget);
+    mainLayout->addWidget(fileTreeView, 1);
+    mainLayout->addWidget(m_tabWidget, 4);
+    setCentralWidget(mainWidget);
 
     connect(tabSizeCombox, SIGNAL(activated(QString)), this, SLOT(setTabToWidth(QString)));
 
@@ -154,6 +196,9 @@ void MainWindow::initUI()
     recentFileMenu = new QMenu("最近的文件");
     loadRectFiles();
     menuBar()->addMenu(recentFileMenu);
+
+    QMenu *helpMenu = menuBar()->addMenu(tr("帮助"));
+    helpMenu->addAction(aboutAct);
 
     autoSaveAction = new QAction("自动保存");
     autoSaveAction->setCheckable(true);
@@ -168,6 +213,27 @@ void MainWindow::initUI()
     connect(fTimer, &QTimer::timeout, this, &MainWindow::autoSaveSlot);
 //    connect(fTimer,SIGNAL(timeout()),this,SLOT(on_timer_timeout()));
     // 每过1秒（或者2s），保存一次（触发保存函数）
+}
+
+void MainWindow::openFileTreeView(const QModelIndex &index)
+{
+    QString path =  fileTreeView->model.filePath(index);
+    QFileInfo info(path);
+    QString name = info.fileName();
+    QString suffix = info.suffix();
+    QString content;
+    if (suffix == "png" || suffix == "jpg") {
+        content = "can't open this";
+    } else {
+        content = Util::readFile(path);
+    }
+
+    qDebug() << "path" << path << "content" << content;
+
+    Editor *e = getEditor();
+    e->setText(content);
+    int currentIndex = m_tabWidget->currentIndex();
+    m_tabWidget->setTabText(currentIndex, name);
 }
 
 void MainWindow::exitSlot()
@@ -195,6 +261,8 @@ void MainWindow::openSlot()
 
     QString path = QFileDialog::getOpenFileName(this,
                                                     "open file");
+
+    qDebug() << "current file path" << path;
     getEditor()->open(path);
 
     if (path.isEmpty()) {
@@ -323,7 +391,7 @@ void MainWindow::aboutDialogSlot()
         "邮箱: %3<br>""版本: &nbsp;&nbsp;%4<br>"
         "qt: %5<br>").arg(APP_DESCRIPTIONO)
                      .arg(AUTHOR).arg(EMAIL)
-                     .arg(APP_VERSION).arg(QT_VERSION));
+                     .arg(APP_VERSION).arg(QT_CREATOR_VERSION));
 }
 
 void MainWindow::removeSubTab(int index)
