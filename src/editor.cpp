@@ -226,5 +226,5 @@ void Editor::setTabWidth(int tabStop)
     /* 设置 tab 大小 */
     // 如里不设置，默认为 4
     QFontMetrics metrics(this->font()); // 获取字体宽度
-    this->setTabStopWidth(tabStop * metrics.width(' '));
+    setTabStopDistance(tabStop * metrics.horizontalAdvance(' '));
 }
