@@ -54,10 +54,10 @@ void MainWindow::initUI()
     settingAct = new QAction("设置", this);
     updateAct = new QAction("更新", this);
 
-    openFolderAct = new QAction("open folder", this);
+    openFolderAct = new QAction("打开文件夹", this);
 
     // viewTree
-    treeViewAction = new QAction("open tree view", this);
+    treeViewAction = new QAction("文件夹浏览", this);
     treeViewAction->setShortcut(QString("Ctrl+T"));
 
     QMenu *fileMenu = menuBar()->addMenu(tr("文件"));
