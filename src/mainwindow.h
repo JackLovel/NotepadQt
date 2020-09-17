@@ -64,6 +64,7 @@ protected:
     void closeEvent(QCloseEvent *e) override;
     void dragEnterEvent(QDragEnterEvent *e) override; // 拖动
     void dropEvent(QDropEvent *e) override; // 释放
+    void contextMenuEvent(QContextMenuEvent *event) override; // 右击菜单事件
 
 public slots:
    void exitSlot();

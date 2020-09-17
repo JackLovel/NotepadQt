@@ -544,6 +544,18 @@ void MainWindow::dropEvent(QDropEvent *e)
     getEditor()->setText(Util::readFile(fileName));
 }
 
+void MainWindow::contextMenuEvent(QContextMenuEvent *e)
+{
+    QMenu *m = new QMenu();
+    m->addAction(undoAct);
+    m->addAction(redoAct);
+    m->addSeparator();
+    m->addAction(copyAct);
+    m->exec(e->globalPos());
+
+    delete m;
+}
+
 void MainWindow::findSlot(QString str, bool ignore, bool choose)
 {
     QString text = str;
