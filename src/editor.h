@@ -48,8 +48,6 @@ protected:
     void wheelEvent(QWheelEvent * event);
     void contextMenuEvent(QContextMenuEvent *e);
 
-
-
 public slots:
     void copy();
     void cut();
