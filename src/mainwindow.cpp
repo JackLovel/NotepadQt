@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "config.h"
 
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -54,6 +56,13 @@ void MainWindow::initUI()
     settingAct = new QAction("设置", this);
     updateAct = new QAction("更新", this);
 
+    // testPage
+    testPageAction = new QAction("test", this);
+    testDialog = new TestDialog(this);
+    connect(testPageAction, &QAction::triggered, this, [&](){
+        testDialog->show();
+    });
+
     openFolderAct = new QAction("打开文件夹", this);
 
     // viewTree
@@ -70,6 +79,9 @@ void MainWindow::initUI()
     fileMenu->addAction(settingAct);
     fileMenu->addAction(exitAct);
     fileMenu->addAction(openFolderAct);
+
+    // testPage
+    fileMenu->addAction(testPageAction);
 
     QMenu *editMenu = menuBar()->addMenu(tr("编辑"));
     editMenu->addAction(copyAct);

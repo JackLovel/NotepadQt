@@ -11,6 +11,9 @@
 #include "md5dialog.h"
 #include "filetreeview.h"
 
+// testPage
+#include "testdialog.h"
+
 #include <QWidget>
 #include <QMainWindow>
 #include <QSettings>
@@ -131,6 +134,10 @@ private:
     QAction *findAct;
     QAction *replaceAction;
     QAction *autoSaveAction;
+
+    // testPage
+    QAction *testPageAction;
+    TestDialog *testDialog;
 
     // treeview, open folder
     QAction *openFolderAct;

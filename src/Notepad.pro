@@ -30,6 +30,7 @@ SOURCES += \
         replacedialog.cpp \
         settingdialog.cpp \
         shortcutpage.cpp \
+    testdialog.cpp \
         util.cpp
 
 HEADERS += \
@@ -46,6 +47,7 @@ HEADERS += \
         replacedialog.h \
         settingdialog.h \
         shortcutpage.h \
+        testdialog.h \
         util.h
 
 # Default rules for deployment.
@@ -58,3 +60,6 @@ RESOURCES += \
 
 DISTFILES += \
     style/style.qss
+
+FORMS += \
+    testdialog.ui
