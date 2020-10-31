@@ -68,12 +68,13 @@ void TestDialog::filterRegExpChanged() {
     QRegExp regExp(text, caseSen, syntax);
     proxyModel->setFilterRegExp(regExp);
 
+    QIcon *icon = new QIcon("");
     bool lineEditEmpty = ui->lineEdit->text() == "";
-    if (lineEditEmpty) {
-        clearAction->setIcon(QIcon(""));
-    } else {
-        clearAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogResetButton));
+    if (!lineEditEmpty) {
+        *icon = QApplication::style()
+                ->standardIcon(QStyle::SP_DialogResetButton);
     }
+    clearAction->setIcon(*icon);
 }
 
 void TestDialog::addMail(QAbstractItemModel *model, const QString &name, const QString &key)
