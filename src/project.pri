@@ -1,3 +1,7 @@
+QT       += core gui concurrent printsupport
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 SOURCES += \
         advancesettingpage.cpp \
 #        config.cpp \
