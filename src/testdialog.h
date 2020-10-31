@@ -22,7 +22,7 @@ public:
     ~TestDialog();
 
     void setSourceModel(QAbstractItemModel *model);
-    void addMail(QAbstractItemModel *model, const QString &name);
+    void addMail(QAbstractItemModel *model, const QString &name, const QString &key);
     void initModel(QAbstractItemModel *model);
     QStandardItemModel *standardItemModel;
 

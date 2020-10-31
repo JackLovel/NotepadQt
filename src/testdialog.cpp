@@ -10,7 +10,7 @@ TestDialog::TestDialog(QWidget *parent) :
     ui->setupUi(this);
 
     proxyModel = new QSortFilterProxyModel;
-    standardItemModel = new QStandardItemModel(0, 1, this);
+    standardItemModel = new QStandardItemModel(0, 2, this);
 
     ui->lineEdit->setPlaceholderText("输入...");
 
@@ -28,6 +28,9 @@ TestDialog::TestDialog(QWidget *parent) :
     initModel(standardItemModel);
 
     setSourceModel(standardItemModel);
+
+    // 隐藏源视图
+    ui->sourceView->setHidden(true);
 
     setWindowTitle("测试对话框");
 }
@@ -53,16 +56,17 @@ void TestDialog::filterRegExpChanged() {
     proxyModel->setFilterRegExp(regExp);
 }
 
-void TestDialog::addMail(QAbstractItemModel *model, const QString &name)
+void TestDialog::addMail(QAbstractItemModel *model, const QString &name, const QString &key)
 {
     model->insertRow(0);
     model->setData(model->index(0, 0), name);
+    model->setData(model->index(0, 1), key);
 }
 
 void TestDialog::initModel(QAbstractItemModel *model)
 {
-    model->setHeaderData(0, Qt::Horizontal, "姓名");
-
-    addMail(model, "li hong");
-    addMail(model, "wang gang");
+    model->setHeaderData(0, Qt::Horizontal, "名称");
+    model->setHeaderData(1, Qt::Horizontal, "快捷键");
+    addMail(model, "查找", "ctrl+a");
+    addMail(model, "替换", "ctrl+r");
 }
