@@ -1,7 +1,9 @@
 #include "testdialog.h"
 #include "ui_testdialog.h"
 
+#include <QDebug>
 #include <QStandardItem>
+#include <QAction>
 
 TestDialog::TestDialog(QWidget *parent) :
     QDialog(parent),
@@ -32,7 +34,18 @@ TestDialog::TestDialog(QWidget *parent) :
     // 隐藏源视图
     ui->sourceView->setHidden(true);
 
-    setWindowTitle("测试对话框");
+    this->setWindowTitle("测试对话框");
+
+    // 禁止调节窗口大小
+    this->setFixedSize(this->width(), this->height());
+
+    clearAction = new QAction;
+    // QLineEdit::TrailingPosition表示将action放置在右边
+    ui->lineEdit->addAction(clearAction, QLineEdit::TrailingPosition);
+    QObject::connect(clearAction,
+          &QAction::triggered,
+          ui->lineEdit,
+          [&]{ ui->lineEdit->setText(""); });
 }
 
 TestDialog::~TestDialog()
@@ -54,6 +67,13 @@ void TestDialog::filterRegExpChanged() {
 
     QRegExp regExp(text, caseSen, syntax);
     proxyModel->setFilterRegExp(regExp);
+
+    bool lineEditEmpty = ui->lineEdit->text() == "";
+    if (lineEditEmpty) {
+        clearAction->setIcon(QIcon(""));
+    } else {
+        clearAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_DialogResetButton));
+    }
 }
 
 void TestDialog::addMail(QAbstractItemModel *model, const QString &name, const QString &key)

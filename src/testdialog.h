@@ -33,6 +33,7 @@ private:
     Ui::TestDialog *ui;
 
     QSortFilterProxyModel *proxyModel;
+    QAction *clearAction;
 };
 
 #endif // TESTDIALOG_H
