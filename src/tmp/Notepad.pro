@@ -20,6 +20,7 @@ RESOURCES += \
     resource.qrc
 
 DISTFILES += \
+    CMakeLists.txt \
     project.pri \
     style/style.qss
 
